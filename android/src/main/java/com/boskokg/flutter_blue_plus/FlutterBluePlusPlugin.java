@@ -318,6 +318,26 @@ public class FlutterBluePlusPlugin implements FlutterPlugin, MethodCallHandler, 
           }
           String deviceId = options.getRemoteId();
           BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(deviceId);
+
+           // YouTest: Agustin 06/30/22
+          log(LogLevel.INFO, " :::::::  YouTest - Start Pairing... with: " + device.getName());
+
+          if (device.getBondState() == BluetoothDevice.BOND_NONE) {
+            log(LogLevel.INFO, " :::::::  YouTest - device.getBondState() == BluetoothDevice.BOND_NONE ");
+
+            device.setPin("0000".getBytes());
+
+            if (device.createBond()) {
+              log(LogLevel.INFO, " :::::::  YouTest - createBond success");
+            }else{
+              log(LogLevel.INFO, " :::::::  YouTest - createBond failed");
+            }
+
+          } else {
+            log(LogLevel.INFO, " :::::::  YouTest - device already bonded" );
+          }
+
+
           boolean isConnected = mBluetoothManager.getConnectedDevices(BluetoothProfile.GATT).contains(device);
 
           // If device is already connected, return error
